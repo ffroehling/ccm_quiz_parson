@@ -1,7 +1,7 @@
-ccm.files[ 'config.js' ] = {
-  "local" : {
-    "css" : ['ccm.load', './style.css'],
-    "question_text" : "Bringen Sie die Elemente in die richtige Reihenfolge!",
+ccm.files[ 'configs.js' ] = {
+  "hello_world" : {
+    "css" : ["ccm.load", "resources/style.css"],
+    "question_text" : "Create a Hello World program in C!",
     "elements": [
       {"value" : "int main(int argc, char** argv){", "position" : 1, "indentation" : 0} ,
       {"value" : "printf('Hello World');", "position" : 2, "indentation" : 1},
