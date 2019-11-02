@@ -86,6 +86,10 @@
         this.traverse_light_dom();
       };
   
+      /**
+       * traverse_light_dom is called on init and searches for defined elements
+       * in the lightdom. These answers are used with higher priority.
+       */
       this.traverse_light_dom = () => {
         if(!self.inner){
           return;
@@ -103,59 +107,43 @@
         if(elements.length > 0){
           this.elements = elements;
         }
-        /*
-         * #################
-         * THE SOURCE CODE IN THIS AREA IS BASED AND ALMOST EQUIVALENT 
-         * TO André Kless' quiz component
-         * https://akless.github.io/ccm-components/quiz/ccm.quiz.js
-         * #################
-         */  
-        
-        //let answers = [];
-
-        //[ ...self.inner.children ].forEach( answer_tag => {
-        //    // no answer tag? => skip
-        //    if ( answer_tag.tagName !== 'CCM-CHOICE-ANSWER' ) return;
-
-        //    /**
-        //     * answer data (generated out of answer tag)
-        //     * @type {Object}
-        //     */
-        //    const answer = $.generateConfig( answer_tag );
-        //    answers.push(answer);
-
-        //  } );
-
-        //  // add question data to question data sets
-        //  if(answers.length > 0){
-        //    this.answers = answers;
-        //  }
       } ;
 
 
+
+      /**
+       * ready is called once after the initialization and is then deleted
+       */
+      this.ready = async () => {
+      };
+
+      /**
+       * on_answer_callback raises the callback (which is usually set by the 
+       * parent component) when the user gave an answer and the callback 
+       * is defined. 
+       */
       this.on_answer_callback = () => {
         if(this.answer_callback){
           this.answer_callback(this.percentage, this.given_answer);
         }
       };
-      /**
-       * is called once after the initialization and is then deleted
-       */
-      this.ready = async () => {
-      };
 
+      /*#####SECTION INTERFACE FOR REALTIME QUIZ COMPONENT##### */
+
+      /**
+       * set_given_answer sets a given answer to the component to get this
+       * answer displayed
+       * @param {Object} answer - defined answer object from the config
+       */
       this.set_given_answer = (answer) => {
         //this.given_answer = answer;
         this.sorted = answer;
       };
 
-      this.on_drag_start = (element) => {
-        return (event) => {
-          event.dataTransfer.setData("element", element);
-          this.dragged_element = element;
-        }
-      };
-
+      /**
+       * show_correct_answer renders the correct answer and gives the user
+       * the feedback to the given (or set by 'set_given_answer') answer
+       */
       this.show_correct_answer = () => {
         this.disable_submit();
 
@@ -175,7 +163,22 @@
 
         this.render_elements();
       }
+      /*#####END SECTION INTERFACE FOR REALTIME QUIZ COMPONENT##### */
 
+      /**
+       * on_drag_start gets called when an element has been taken by the mouse
+       */
+      this.on_drag_start = (element) => {
+        return (event) => {
+          event.dataTransfer.setData("element", element);
+          this.dragged_element = element;
+        }
+      };
+
+      /**
+       * disable_submit prevents user from submitting an answer by
+       * deactivating the according button
+       */
       this.disable_submit = () => {
         this.disabled_submit = true;
 
@@ -186,6 +189,10 @@
         });
       }
 
+      /**
+       * on_submit gets called when the user presses the submit button
+       * @param {Object} event - The event object of the click 
+       */
       this.on_submit = (event) => {
         if(this.disabled_submit){
           return;
@@ -217,6 +224,11 @@
         }
       };
 
+      /**
+       * on_drag_over gets called whenever the user drags an element over
+       * another element.
+       * @param {Object} event - The event object of the click 
+       */
       this.on_dragover = (event) => {
         let list = event.target.attributes['list'].value;
         let idx = event.target.attributes['idx'].value;
@@ -230,6 +242,11 @@
         }
       };
 
+
+      /**
+       * on_drop gets called when the user drops an element to another element
+       * @param {Object} event - The event object of the click 
+       */
       this.on_drop = (event) => {
         event.preventDefault();
 
@@ -264,6 +281,14 @@
         this.render_elements();
       }
 
+      /**
+       * create_filled_element creates an element which can be dragged by 
+       * the user (which is a parson item to be sorted in).
+       * @param {String} list - The list identifier of the list the element is in
+       * @param {Number} idx - The position of the element in the list
+       * @param {Object} element - The parson element (from config)
+       * @returns {Object} The created Tag-Element
+       */
       this.create_filled_element = (list, idx, element) => {
           let e_filled = {
             tag : 'li',
@@ -294,6 +319,13 @@
           return e_filled;
       }
 
+      /**
+       * create_placeholder_element creates an element where the user can 
+       * drop off an dragged element 
+       * @param {String} list - The list identifier of the list the element is in
+       * @param {Number} idx - The position of the element in the list
+       * @returns {Object} The created Tag-Element
+       */
       this.create_placeholder_element = (list, idx) => {
           let e_placeholder = {
             tag : 'li',
@@ -307,7 +339,13 @@
           return e_placeholder;
       }
 
-
+      /**
+       * list_elements created tags of the elements for the given list
+       * (sorted or unsorted) and inserts this in the according ul
+       * @param {Object} elements: The elements to be inserted to ul
+       * @param {String} elements: The list identifier
+       * @param {Object} ul: The ul the element will be added to
+       */
       this.list_elements = (elements, list, ul) => {
         elements.forEach((element, index)=> {
           if(element){
@@ -322,6 +360,9 @@
         });
       };
 
+      /**
+       * render_elements renders the current state of the lists
+       */
       this.render_elements = () => {
         //first clear it
         this.html.main.inner[1].inner[0].inner = [];
@@ -337,7 +378,10 @@
       };
 
 
-
+      /**
+       * unify_config applies neccessary default settings
+       * @returns {Boolean} true
+       */
       this.unify_config = async () => {
         //when no position is given take it from the given order
         for(var i = 0; i < this.elements.length; i++){
@@ -350,7 +394,7 @@
       }
 
       /**
-       * starts the instance
+       * start starts the instance
        */
       this.start = async () => {
         //self.html.main.inner[2].onclick = this.submit;
