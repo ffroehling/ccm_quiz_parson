@@ -86,6 +86,10 @@
       };
   
       this.traverse_light_dom = () => {
+        if(!self.inner){
+          return;
+        }
+
         let elements = [];
         [ ...self.inner.children ].forEach( parson_tag => {
             if ( parson_tag.tagName !== 'CCM-PARSON-ELEMENT' ) return;
