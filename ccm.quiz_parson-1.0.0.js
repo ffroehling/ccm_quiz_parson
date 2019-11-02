@@ -1,6 +1,6 @@
 /**
  * @overview ccm component for quiz single choice question
- * @author Felix Fröhling <felix.froehling@smail.inf.h-brs.de> 2019
+ * @author Felix Fröhling <felix.froehling1@gmail.com> 2019
  * @license The MIT License (MIT)
  * @version latest (1.0.0)
  */
