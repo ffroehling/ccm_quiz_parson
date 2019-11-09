@@ -147,11 +147,13 @@
       this.show_correct_answer = () => {
         this.disable_submit();
 
-        this.unsorted = $.clone(this.correct);
         this.given_answer = this.sorted;
 
         for(var i = 0; i < this.sorted.length; i++){
           let element = this.sorted[i];
+          if(!element){
+            continue;
+          }
 
           if((i+1) == element.position){
             element.correct = true;
@@ -160,6 +162,23 @@
             element.correct = false;
           }
         }
+
+        for(var i = 0; i < this.unsorted.length; i++){
+          if(!this.unsorted[i]){
+            continue;
+          }
+
+          //get a free element in this.sorted
+          for(var j = 0; j < this.sorted.length; j++){
+            if(this.sorted[j] == null){
+              this.sorted[j] = $.clone(this.unsorted[i]);
+              this.sorted[j].correct = false;
+              break;
+            }
+          }
+        }
+
+        this.unsorted = $.clone(this.correct);
 
         this.render_elements();
       }
@@ -241,7 +260,6 @@
 
         this.disable_submit();
 
-        this.on_answer_callback();
         let perc_answer = 100 / this.correct.length;
         let percent = 0;
 
@@ -252,7 +270,9 @@
           }
         }
 
+        console.log('Reached ' + percent + "%");
         this.percentage = percent;
+        this.on_answer_callback();
 
         //show feedback instant if wished
         if(this.show_feedback){
