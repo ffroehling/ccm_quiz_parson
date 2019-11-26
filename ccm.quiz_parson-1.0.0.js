@@ -270,7 +270,6 @@
           }
         }
 
-        console.log('Reached ' + percent + "%");
         this.percentage = percent;
         this.on_answer_callback();
 
@@ -428,7 +427,6 @@
         this.list_elements(this.unsorted, "unsorted", self.html.main.inner[1].inner[0]);
         this.list_elements(this.sorted, "sorted", self.html.main.inner[1].inner[1]);
 
-        console.log(self.html.main);
         let html = $.html(self.html.main);
         $.setContent(self.element, html);
       };
